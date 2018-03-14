@@ -56,7 +56,7 @@ if($canUpload==true)
     echo $fileName."，上传成功！大小：".($fileSize/1024)."KB<br/><br/>";  
     
     // 测试 调用百度AI接口
-    $command = './a.out '."/home/gujiguji/tmp/".$saveName;
+    $command = './discern '."/home/gujiguji/tmp/".$saveName;
     $result = passthru($command);
     print_r($result);
 }  
