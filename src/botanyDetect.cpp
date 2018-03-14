@@ -78,7 +78,13 @@ Json::Value botanyDetect::resJson()
     Json::Value res;
     res["name"] = resName;
     res["score"] = reScore;
-
+    // 判断解析的 json 合法性, 如果为空, 说明 鉴别 失败
+    if (resName.size() > 0)
+    {
+        cout << "识别成功 ^_^ " << endl;
+        return res;
+    }
+    cout << "识别失败, 请重新上传 >_< " << endl;
     return res;
 }
 
