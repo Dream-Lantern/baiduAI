@@ -36,7 +36,6 @@ int main(int argc, char *argv[])
         cout << "get res err!" << endl;
         return -1;
     }
-    //cout << foodDetect::request_url << endl;
 
     Json::Value res = food->resJson();
 
