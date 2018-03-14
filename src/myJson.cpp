@@ -63,8 +63,9 @@ int myJson::readJson_String(const std::string & strValue, std::string key, std::
  * @param2 json对象
  * @param3 key
  * @param4 value 传出
+ * @param5 len 默认参数，默认解析1个数组长度
  */
-int myJson::readJson_ArrayObj_Int(const std::string & strValue, std::string obj, std::string key, int &value)
+int myJson::readJson_ArrayObj_Int(const std::string & strValue, std::string obj, std::string key, int &value, int len)
 {
     Json::Reader reader;  
     Json::Value  root; 
@@ -74,7 +75,7 @@ int myJson::readJson_ArrayObj_Int(const std::string & strValue, std::string obj,
     {
         Json::Value arrayObj = root[obj];
         //for(unsigned int i = 0; i < arrayObj.size(); i++)
-        for(unsigned int i = 0; i < 1; i++)
+        for(unsigned int i = 0; i < len; i++)
         { 
             if (arrayObj[i].isMember(key))
             {
@@ -96,8 +97,9 @@ int myJson::readJson_ArrayObj_Int(const std::string & strValue, std::string obj,
  * @param2 json对象
  * @param3 key
  * @param4 value 传出
+ * @param5 len 默认参数，默认解析1个数组长度
  */
-int myJson::readJson_ArrayObj_Double(const std::string & strValue, std::string obj, std::string key, double &value)
+int myJson::readJson_ArrayObj_Double(const std::string & strValue, std::string obj, std::string key, double &value, int len)
 {
     Json::Reader reader;  
     Json::Value  root; 
@@ -107,7 +109,7 @@ int myJson::readJson_ArrayObj_Double(const std::string & strValue, std::string o
     {
         Json::Value arrayObj = root[obj];
         //for(unsigned int i = 0; i < arrayObj.size(); i++)
-        for(unsigned int i = 0; i < 1; i++)
+        for(unsigned int i = 0; i < len; i++)
         { 
             if (arrayObj[i].isMember(key))
             {
@@ -129,8 +131,9 @@ int myJson::readJson_ArrayObj_Double(const std::string & strValue, std::string o
  * @param2 json对象
  * @param3 key
  * @param4 value 传出
+ * @param5 len 默认参数，默认解析1个数组长度
  */
-int myJson::readJson_ArrayObj_String(const std::string & strValue, std::string obj, std::string key, std::string &value)
+int myJson::readJson_ArrayObj_String(const std::string & strValue, std::string obj, std::string key, std::string &value, int len)
 {
     Json::Reader reader;  
     Json::Value  root; 
@@ -140,7 +143,7 @@ int myJson::readJson_ArrayObj_String(const std::string & strValue, std::string o
     {
         Json::Value arrayObj = root[obj];
         //for(unsigned int i = 0; i < arrayObj.size(); i++)
-        for(unsigned int i = 0; i < 1; i++)
+        for(unsigned int i = 0; i < len; i++)
         { 
             if (arrayObj[i].isMember(key))
             {
@@ -162,8 +165,9 @@ int myJson::readJson_ArrayObj_String(const std::string & strValue, std::string o
  * @param2 json对象
  * @param3 key
  * @param4 value 传出
+ * @param5 len 默认参数，默认解析1个数组长度
  */
-int myJson::readJson_ArrayObj_Bool(const std::string & strValue, std::string obj, std::string key, bool &value)
+int myJson::readJson_ArrayObj_Bool(const std::string & strValue, std::string obj, std::string key, bool &value, int len)
 {
     Json::Reader reader;  
     Json::Value  root; 
@@ -173,7 +177,7 @@ int myJson::readJson_ArrayObj_Bool(const std::string & strValue, std::string obj
     {
         Json::Value arrayObj = root[obj];
         //for(unsigned int i = 0; i < arrayObj.size(); i++)
-        for(unsigned int i = 0; i < 1; i++)
+        for(unsigned int i = 0; i < len; i++)
         { 
             if (arrayObj[i].isMember(key))
             {
@@ -191,9 +195,9 @@ int myJson::readJson_ArrayObj_Bool(const std::string & strValue, std::string obj
 
 /**
  * json数组中嵌套一个json对象
- *
+ * @param5 len 默认参数，默认解析1个数组长度
  */
-int myJson::readJson_ArrayObj_Obj(const std::string & strValue, std::string obj, std::string key, std::string keyObj, Json::Value &value)
+int myJson::readJson_ArrayObj_Obj(const std::string & strValue, std::string obj, std::string key, std::string keyObj, Json::Value &value, int len)
 {
     Json::Reader reader;  
     Json::Value  root; 
@@ -203,7 +207,7 @@ int myJson::readJson_ArrayObj_Obj(const std::string & strValue, std::string obj,
     {
         Json::Value arrayObj = root[obj];
         //for(unsigned int i = 0; i < arrayObj.size(); i++)
-        for(unsigned int i = 0; i < 1; i++)
+        for(unsigned int i = 0; i < len; i++)
         { 
             if (arrayObj[i].isMember(key))
             {
