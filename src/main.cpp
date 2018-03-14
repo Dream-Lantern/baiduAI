@@ -24,12 +24,10 @@ int main(int argc, char *argv[])
     string accessToken;
     getAccessToken *access = getAccessToken::getInstance();
     access->get_access_token(accessToken, getAccessToken::API_Key, getAccessToken::Secure_Key);
-
-    /* face
+    /*
     absBusiness* face = new faceDetect;
     int ret = face->discern(accessToken, fileByte);
     */
-
     // food
     absBusiness* food = new foodDetect;
     int ret = food->discern(accessToken, fileByte);
@@ -38,6 +36,7 @@ int main(int argc, char *argv[])
         cout << "get res err!" << endl;
         return -1;
     }
+    //cout << foodDetect::request_url << endl;
 
     Json::Value res = food->resJson();
 
