@@ -11,6 +11,8 @@
 #include "faceDetect.h"
 #include "absBusiness.h"
 #include "foodDetect.h"
+#include "animalDetect.h"
+#include "botanyDetect.h"
 
 using namespace std;
 
@@ -24,25 +26,37 @@ int main(int argc, char *argv[])
     string accessToken;
     getAccessToken *access = getAccessToken::getInstance();
     access->get_access_token(accessToken, getAccessToken::API_Key, getAccessToken::Secure_Key);
-    /*
+    /* 
+    //face
     absBusiness* face = new faceDetect;
     int ret = face->discern(accessToken, fileByte);
-    */
-    // food
+
+    //food
     absBusiness* food = new foodDetect;
     int ret = food->discern(accessToken, fileByte);
+
+    // animal
+    absBusiness* animal = new animalDetect;
+    int ret = animal->discern(accessToken, fileByte);
+    */
+
+    // botany
+    absBusiness* botany = new botanyDetect;
+    int ret = botany->discern(accessToken, fileByte);
     if (ret != 0)
     {
         cout << "get res err!" << endl;
         return -1;
     }
+    //cout << foodDetect::request_url << endl;
 
-    Json::Value res = food->resJson();
+    Json::Value res = botany->resJson();
 
     cout << res << endl;
     
     //delete(face);
-    delete(food);
-    
-    return 0;
+    //delete(food);
+    //delete(animal);
+    delete(botany);
+	return 0;
 }
