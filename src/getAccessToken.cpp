@@ -50,7 +50,7 @@ int getAccessToken::get_access_token(std::string &access_token, const std::strin
     int error_code = 0;
     curl = curl_easy_init();
     if (curl)
-	{
+    {
         std::string url = getAccessToken::access_token_url + "&client_id=" + AK + "&client_secret=" + SK;
         curl_easy_setopt(curl, CURLOPT_URL, url.data());
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
@@ -60,7 +60,7 @@ int getAccessToken::get_access_token(std::string &access_token, const std::strin
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, getAccessToken::getToken);
         result_code = curl_easy_perform(curl);
         if (result_code != CURLE_OK) 
-		{
+	{
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                     curl_easy_strerror(result_code));
             return 1;
@@ -69,8 +69,8 @@ int getAccessToken::get_access_token(std::string &access_token, const std::strin
         curl_easy_cleanup(curl);
         error_code = 0;
     } 
-	else
-	{
+    else
+    {
         fprintf(stderr, "curl_easy_init() failed.");
         error_code = 1;
     }

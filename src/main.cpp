@@ -44,5 +44,6 @@ int main(int argc, char *argv[])
     
     //delete(face);
     delete(food);
-	return 0;
+    
+    return 0;
 }
