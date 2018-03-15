@@ -13,6 +13,7 @@
 #include "foodDetect.h"
 #include "animalDetect.h"
 #include "botanyDetect.h"
+#include "fdfsUploadFile.h"
 
 using namespace std;
 
@@ -37,8 +38,22 @@ int main(int argc, char *argv[])
     }
 
     Json::Value res = animal->resJson();
-
     cout << res << endl;
+
+    // 上传 图片到 fdfs,  fileId 为 fdfs里存储的文件名称
+    char fileId[64] = {0};
+    uploadFile* upFile = uploadFile::getInstance();
+    // 此时 argv[1] 为 php保存到本地的 绝对路径
+    string fileNameTmp = argv[1];
+
+    const char* fileName = fileNameTmp.c_str();
+    ret = upFile->myUploadFile(upFile->m_confFile, fileName, fileId, sizeof(fileId));
+    if (ret != 0)
+    {
+        cout << "fdfs err" << endl;
+        delete(animal);
+        return -1;
+    }
     
     delete(animal);
 	return 0;
