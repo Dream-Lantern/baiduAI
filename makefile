@@ -17,6 +17,7 @@ Face:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/getAccessToken.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
+		$(COMM_PATH)/fdfsUploadFile.o \
 		$(SRC_PATH)/Face.o \
 		$(SRC_PATH)/faceDetect.o
 	$(CC) -o $@ $^ -lcurl -ljson
@@ -26,6 +27,7 @@ Food:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/getAccessToken.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
+		$(COMM_PATH)/fdfsUploadFile.o \
 		$(SRC_PATH)/Food.o \
 		$(SRC_PATH)/foodDetect.o
 	$(CC) -o $@ $^ -lcurl -ljson
@@ -35,6 +37,7 @@ Animal:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/getAccessToken.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
+		$(COMM_PATH)/fdfsUploadFile.o \
 		$(SRC_PATH)/Animal.o \
 		$(SRC_PATH)/animalDetect.o
 	$(CC) -o $@ $^ -lcurl -ljson
@@ -44,6 +47,7 @@ Botany:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/getAccessToken.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
+		$(COMM_PATH)/fdfsUploadFile.o \
 		$(SRC_PATH)/Botany.o \
 		$(SRC_PATH)/botanyDetect.o
 	$(CC) -o $@ $^ -lcurl -ljson
