@@ -86,6 +86,9 @@ Json::Value faceDetect::resJson()
     string resGender;
     ret = myjson->readJson_ArrayObj_String(m_jsonRes, "result", "gender", resGender);
 
+    string resRace;
+    ret = myjson->readJson_ArrayObj_String(m_jsonRes, "result", "race", resRace);
+
     int resGlasses = 0;
     ret = myjson->readJson_ArrayObj_Int(m_jsonRes, "result", "glasses", resGlasses);
     
@@ -96,6 +99,7 @@ Json::Value faceDetect::resJson()
     res["age"] = resAge;
     res["beauty"] = resBeauty;
     res["gender"] = resGender;
+    res["race"] = resRace;
     res["glasses"] = resGlasses;
     res["type"] = resType;
     // 判断解析的 json 合法性, 如果为空, 说明 鉴别 失败
