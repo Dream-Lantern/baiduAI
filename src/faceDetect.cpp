@@ -4,6 +4,8 @@
 #include <curl/curl.h>
 #include "faceDetect.h"
 #include "myJson.h"
+#include "mySQL.h"
+#include "fdfsUploadFile.h"
 
 using namespace std;
 
@@ -95,7 +97,6 @@ Json::Value faceDetect::resJson()
     Json::Value resType;
     ret = myjson->readJson_ArrayObj_Obj(m_jsonRes, "result", "qualities", "type", resType);
 
-    // parse succ!
     Json::Value res;
     if (ret == 0)
     {
@@ -115,3 +116,48 @@ Json::Value faceDetect::resJson()
     cout << "识别失败, 请重新上传 >_< " << endl;
     return res;
 }
+
+// 将图片上传到 fdfs
+int faceDetect::uploadFdfs(char* localFile)
+{
+    m_imgUrl[64] = {0};
+    uploadFile* upFile = uploadFile::getInstance();
+    // 此时 argv[1] 为 php保存到本地的 绝对路径
+    string fileNameTmp = localFile;
+
+    const char* fileName = fileNameTmp.c_str();
+    int ret = upFile->myUploadFile(upFile->m_confFile, fileName, m_imgUrl, sizeof(m_imgUrl));
+    if (ret != 0)
+    {
+        cout << "fdfs err" << endl;
+        return -1;
+    }
+    return 0;
+}
+
+// 将图片信息保存到 mysql数据库中
+int faceDetect::saveDB(const char* host, const char* user, const char* pswd, const char* dbName)
+{
+    // 获取 单例
+    mySQL* mysql = mySQL::getInstance();
+    // 建立连接
+    mysql->m_sqlHandler = mysql->conn(host, user, pswd, dbName);
+    if (mysql->m_sqlHandler == NULL)
+    {
+        cout << __FUNCTION__ << "real conn err" << endl;
+    }
+    // sql赋值
+    Json::Value res = resJson();
+    int age = res["age"].asInt();
+    double beauty = res["beauty"].asDouble();
+    const char* gender = res["gender"].asString().c_str();
+    int glasses = res["glasses"].asInt();
+    const char* race = res["race"].asString().c_str();
+    char intertSql[128] = {0};
+
+    sprintf(intertSql, "insert into face(age, beauty, gender, glass, race, url_img) values(%d, %lf, '%s', %d, '%s', '%s')", age, beauty, gender, glasses, race, m_imgUrl);
+    int ret = mysql->myQuery(intertSql);
+    cout << res << endl;
+    return ret;   
+}
+
