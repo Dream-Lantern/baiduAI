@@ -7,6 +7,7 @@ using namespace std;
 class absBusiness
 {
     public:
+    // 组织 rquest 发送给 baidu
     virtual int discern(const std::string &access_token, const std::string &base64Buf) = 0;
 
     // 解析json结果
