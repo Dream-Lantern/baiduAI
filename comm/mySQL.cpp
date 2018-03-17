@@ -30,6 +30,7 @@ MYSQL* mySQL::conn(const char* host, const char* user, const char* pswd, const c
     // 连接数据库
     if(mysql_real_connect(m_sqlHandler, host, user, pswd, dbName, 0, NULL, 0))
     {
+        mysql_query(m_sqlHandler, "SET NAMES UTF8");
         return m_sqlHandler;
     }
     else
@@ -41,8 +42,9 @@ MYSQL* mySQL::conn(const char* host, const char* user, const char* pswd, const c
 // 执行sql语句
 int mySQL::myQuery(char* sql)
 {
-
+    // 执行 sql
     int ret = mysql_query(m_sqlHandler, sql);
+    // 断开连接
     mysql_close(m_sqlHandler);
     return ret;
 }
