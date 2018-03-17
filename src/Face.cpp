@@ -57,10 +57,12 @@ int main(int argc, char *argv[])
     ret = face->saveDB(localhost, user, pswd, dbName);
     if (ret != 0)
     {
-        cout << "insert err" << endl;
+        //cout << "insert err" << endl;
+        // 插入数据库失败
+        delete(face);
         return -1;
     }
-    cout << "insert succ" << endl;
+    //cout << "insert succ" << endl;
     delete(face);
 
     return 0;
