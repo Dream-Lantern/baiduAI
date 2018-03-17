@@ -3,6 +3,7 @@
 #include <strings.h>
 #include <curl/curl.h>
 #include <json/json.h>
+#include <stdio.h>
 #include "base64.h"
 #include "fileOP.h"
 #include "getAccessToken.h"
@@ -14,6 +15,7 @@
 #include "animalDetect.h"
 #include "botanyDetect.h"
 #include "fdfsUploadFile.h"
+#include "mySQL.h"
 
 using namespace std;
 
@@ -36,7 +38,7 @@ int main(int argc, char *argv[])
         cout << "get res err!" << endl;
         return -1;
     }
-
+    /*
     Json::Value res = animal->resJson();
     cout << res << endl;
 
@@ -54,7 +56,33 @@ int main(int argc, char *argv[])
         delete(animal);
         return -1;
     }
-    
+    */
+
+    // 上传 图片到 fdfs,  fileId 为 fdfs里存储的文件名称
+    ret = animal->uploadFdfs(argv[1]);
+    if (ret != 0)
+    {
+        delete(animal);
+        return -1;
+    }
+
+    // TODO 此处应当从配置文件中读取 IP等信息
+   
+    // 将图片url, json数据存储到 mysql
+    const char* localhost = "localhost";
+    const char* user = "root";
+    const char* pswd = "qwe123";
+    const char* dbName = "discern_img";
+    ret = animal->saveDB(localhost, user, pswd, dbName);
+    if (ret != 0)
+    {
+        //cout << "insert err" << endl;
+        // 插入数据库失败
+        delete(animal);
+        return -1;
+    }
+    //cout << "insert succ" << endl;
+
     delete(animal);
 	return 0;
 }
