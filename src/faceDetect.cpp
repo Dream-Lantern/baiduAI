@@ -32,7 +32,7 @@ size_t faceDetect::callback(void *ptr, size_t size, size_t nmemb, void *stream)
  */
 //int faceDetect::detect(std::string &json_result, const std::string &access_token, const std::string &base64Buf) {
 int faceDetect::discern(const std::string &access_token, const std::string &base64Buf) {
-    std::string url = request_url + "?access_token=" + access_token;
+    std::string url = faceDetect::request_url + "?access_token=" + access_token;
     CURL *curl = NULL;
     CURLcode result_code;
     int is_success;
@@ -150,12 +150,20 @@ int faceDetect::saveDB(const char* host, const char* user, const char* pswd, con
     Json::Value res = resJson();
     int age = res["age"].asInt();
     double beauty = res["beauty"].asDouble();
-    const char* gender = res["gender"].asString().c_str();
+    string gender = res["gender"].asString();
+    if (gender == "")
+    {
+        // json解析失败， 不插入数据库
+        return -1;
+    }
+    const char* sqlGender = gender.c_str();
     int glasses = res["glasses"].asInt();
-    const char* race = res["race"].asString().c_str();
-    char intertSql[128] = {0};
+    string race = res["race"].asString();
+    const char* sqlRace = race.c_str();
 
-    sprintf(intertSql, "insert into face(age, beauty, gender, glass, race, url_img) values(%d, %lf, '%s', %d, '%s', '%s')", age, beauty, gender, glasses, race, m_imgUrl);
+    char intertSql[256] = {0};
+
+    sprintf(intertSql, "insert into face(age, beauty, gender, glass, race, url_img) values(%d, %lf, '%s', %d, '%s', '%s')", age, beauty, sqlGender, glasses, sqlRace, m_imgUrl);
     int ret = mysql->myQuery(intertSql);
     cout << res << endl;
     return ret;   
