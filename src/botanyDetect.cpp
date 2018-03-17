@@ -4,6 +4,8 @@
 #include <json/json.h>
 #include "botanyDetect.h"
 #include "myJson.h"
+#include "mySQL.h"
+#include "fdfsUploadFile.h"
 
 // 植物识别 请求的 url
 const std::string botanyDetect::request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/plant";
@@ -90,4 +92,56 @@ Json::Value botanyDetect::resJson()
     cout << "识别失败, 请重新上传 >_< " << endl;
     return res;
 }
+
+// 将图片上传到 fdfs
+int botanyDetect::uploadFdfs(char* localFile)
+{
+    m_imgUrl[64] = {0};
+    uploadFile* upFile = uploadFile::getInstance();
+    // 此时 argv[1] 为 php保存到本地的 绝对路径
+    string fileNameTmp = localFile;
+
+    const char* fileName = fileNameTmp.c_str();
+    // m_imgUrl 为传出参数, 被赋值为 图片的url
+    int ret = upFile->myUploadFile(upFile->m_confFile, fileName, m_imgUrl, sizeof(m_imgUrl));
+    if (ret != 0)
+    {
+        cout << "fdfs err" << endl;
+        return -1;
+    }
+    return 0;
+}
+
+// 将图片信息保存到 mysql数据库中
+int botanyDetect::saveDB(const char* host, const char* user, const char* pswd, const char* dbName)
+{
+    // 获取 单例
+    mySQL* mysql = mySQL::getInstance();
+    // 建立连接
+    mysql->m_sqlHandler = mysql->conn(host, user, pswd, dbName);
+    if (mysql->m_sqlHandler == NULL)
+    {
+        cout << __FUNCTION__ << "real conn err" << endl;
+    }
+
+    // sql赋值
+    Json::Value res = resJson();
+
+    string resName = res["name"].asString();
+    if (resName == "")
+    {
+        // json 解析失败， 不插入数据库
+        return -1;
+    }
+    const char* sqlName = resName.c_str();
+    double reScore = res["score"].asDouble();
+    // 存储sql语句
+    char intertSql[256] = {0};
+
+    sprintf(intertSql, "insert into botany(name, score, url_img) values('%s', %lf, '%s')", sqlName, reScore, m_imgUrl);
+    int ret = mysql->myQuery(intertSql);
+    cout << res << endl;
+    return ret;   
+}
+
 
