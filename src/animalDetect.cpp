@@ -4,6 +4,8 @@
 #include <json/json.h>
 #include "animalDetect.h"
 #include "myJson.h"
+#include "mySQL.h"
+#include "fdfsUploadFile.h"
 
 // 动物 url
 const std::string animalDetect::request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v1/animal";
@@ -90,3 +92,56 @@ Json::Value animalDetect::resJson()
     cout << "识别失败, 请重新上传 >_< " << endl;
     return res;
 }
+
+// 将图片上传到 fdfs
+int animalDetect::uploadFdfs(char* localFile)
+{
+    m_imgUrl[64] = {0};
+    uploadFile* upFile = uploadFile::getInstance();
+    // 此时 argv[1] 为 php保存到本地的 绝对路径
+    string fileNameTmp = localFile;
+
+    const char* fileName = fileNameTmp.c_str();
+    // m_imgUrl 为传出参数, 被赋值为 图片的url
+    int ret = upFile->myUploadFile(upFile->m_confFile, fileName, m_imgUrl, sizeof(m_imgUrl));
+    if (ret != 0)
+    {
+        cout << "fdfs err" << endl;
+        return -1;
+    }
+    return 0;
+}
+
+// 将图片信息保存到 mysql数据库中
+int animalDetect::saveDB(const char* host, const char* user, const char* pswd, const char* dbName)
+{
+    // 获取 单例
+    mySQL* mysql = mySQL::getInstance();
+    // 建立连接
+    mysql->m_sqlHandler = mysql->conn(host, user, pswd, dbName);
+    if (mysql->m_sqlHandler == NULL)
+    {
+        cout << __FUNCTION__ << "real conn err" << endl;
+    }
+
+    // sql赋值
+    Json::Value res = resJson();
+    string name = res["name"].asString();
+    // 对解析json做出判断, 如果出错则不插入数据库
+    if (name == "")
+    {
+        // 解析失败 不会插入 数据库
+        return -1;
+    }
+    const char* sqlName = name.c_str();
+    string score = res["score"].asString();
+    const char* sqlScore = score.c_str();
+    // 存储sql语句
+    char intertSql[256] = {0};
+
+    sprintf(intertSql, "insert into animal(name, score, url_img) values('%s', '%s', '%s')", sqlName, sqlScore, m_imgUrl);
+    int ret = mysql->myQuery(intertSql);
+    cout << res << endl;
+    return ret;   
+}
+
