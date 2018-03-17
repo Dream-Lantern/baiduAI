@@ -18,9 +18,10 @@ Face:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
 		$(COMM_PATH)/fdfsUploadFile.o \
+		$(COMM_PATH)/mySQL.o \
 		$(SRC_PATH)/Face.o \
 		$(SRC_PATH)/faceDetect.o
-	$(CC) -o $@ $^ -lcurl -ljson
+	$(CC) -o $@ $^ -lcurl -ljson -lmysqlclient -std=c++11
 
 Food:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/fileOP.o \
@@ -28,9 +29,10 @@ Food:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
 		$(COMM_PATH)/fdfsUploadFile.o \
+		$(COMM_PATH)/mySQL.o \
 		$(SRC_PATH)/Food.o \
 		$(SRC_PATH)/foodDetect.o
-	$(CC) -o $@ $^ -lcurl -ljson
+	$(CC) -o $@ $^ -lcurl -ljson -lmysqlclient -std=c++11
 
 Animal:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/fileOP.o \
@@ -38,9 +40,10 @@ Animal:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
 		$(COMM_PATH)/fdfsUploadFile.o \
+		$(COMM_PATH)/mySQL.o \
 		$(SRC_PATH)/Animal.o \
 		$(SRC_PATH)/animalDetect.o
-	$(CC) -o $@ $^ -lcurl -ljson
+	$(CC) -o $@ $^ -lcurl -ljson -lmysqlclient -std=c++11
 
 Botany:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/fileOP.o \
@@ -48,13 +51,14 @@ Botany:$(COMM_PATH)/base64.o \
 		$(COMM_PATH)/init.o \
 		$(COMM_PATH)/myJson.o \
 		$(COMM_PATH)/fdfsUploadFile.o \
+		$(COMM_PATH)/mySQL.o \
 		$(SRC_PATH)/Botany.o \
 		$(SRC_PATH)/botanyDetect.o
-	$(CC) -o $@ $^ -lcurl -ljson
+	$(CC) -o $@ $^ -lcurl -ljson -lmysqlclient -std=c++11
 
 # 生成所有.o文件
 %.o:%.cpp
-	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $< -std=c++11
 
 # 声明伪文件
 .PHONY:clean
