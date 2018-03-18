@@ -25,14 +25,9 @@ int main(int argc, char *argv[])
     Judge judge;
     string fileByte = judge.init(argv[1]);
 
-    // 获取 access
-    string accessToken;
-    getAccessToken *access = getAccessToken::getInstance();
-    access->get_access_token(accessToken, getAccessToken::API_Key, getAccessToken::Secure_Key);
-
-    // new 一个业务对象 face
+    // new 一个业务对象 face, 发送 post 请求给百度
     absBusiness* face = new faceDetect;
-    int ret = face->discern(accessToken, fileByte);
+    int ret = face->discern(judge.m_accessToken, fileByte);
     if (ret != 0)
     {
         cout << "get res err!" << endl;
@@ -46,23 +41,15 @@ int main(int argc, char *argv[])
         delete(face);
         return -1;
     }
-
-    // TODO 此处应当从配置文件中读取 IP等信息
    
     // 将图片url, json数据存储到 mysql
-    const char* localhost = "localhost";
-    const char* user = "root";
-    const char* pswd = "qwe123";
-    const char* dbName = "discern_img";
-    ret = face->saveDB(localhost, user, pswd, dbName);
+    ret = face->saveDB(judge.m_host.data(), judge.m_user.data(), judge.m_passwd.data(), judge.m_dbName.data());
     if (ret != 0)
     {
-        //cout << "insert err" << endl;
         // 插入数据库失败
         delete(face);
         return -1;
     }
-    //cout << "insert succ" << endl;
     delete(face);
 
     return 0;
