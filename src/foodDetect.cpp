@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <string.h>
 #include <json/json.h>
 #include <curl/curl.h>
 #include "foodDetect.h"
@@ -158,11 +159,23 @@ int foodDetect::saveDB(const char* host, const char* user, const char* pswd, con
     const char* sqlName = name.c_str();
     string probability = res["probability"].asString();
     const char* sqlProbability = probability.c_str();
+
+    // 将成员 m_imgUrl 的有效长度拷贝到字符串中
+    char* imgUrl = (char*)calloc(sizeof(char), strlen(m_imgUrl));   
+    // 51是 fdfsFileID 的长度
+    memcpy(imgUrl, m_imgUrl, 51);
+
     // 存储sql语句
     char intertSql[256] = {0};
 
-    sprintf(intertSql, "insert into food(calorie, has_calorie, name, possible, url_img) values('%s', %d, '%s', '%s', '%s')", sqlCalorie, hasCal, sqlName, sqlProbability, m_imgUrl);
+    sprintf(intertSql, "insert into food(calorie, has_calorie, name, possible, url_img) values('%s', %d, '%s', '%s', '%s')", sqlCalorie, hasCal, sqlName, sqlProbability, imgUrl);
     int ret = mysql->myQuery(intertSql);
     cout << res << endl;
+
+    if (imgUrl != NULL)
+    {
+        free(imgUrl);
+    }
+
     return ret;   
 }
