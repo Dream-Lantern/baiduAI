@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <string.h>
 #include <curl/curl.h>
 #include <json/json.h>
 #include "animalDetect.h"
@@ -136,12 +137,25 @@ int animalDetect::saveDB(const char* host, const char* user, const char* pswd, c
     const char* sqlName = name.c_str();
     string score = res["score"].asString();
     const char* sqlScore = score.c_str();
+
+    // 将成员 m_imgUrl 的有效长度拷贝到字符串中
+    char* imgUrl = (char*)calloc(sizeof(char), strlen(m_imgUrl));   
+    // 51 是 fdfsFileID 的长度
+    memcpy(imgUrl, m_imgUrl, 51);
+    
     // 存储sql语句
     char intertSql[256] = {0};
 
-    sprintf(intertSql, "insert into animal(name, score, url_img) values('%s', '%s', '%s')", sqlName, sqlScore, m_imgUrl);
+    //sprintf(intertSql, "insert into animal(name, score, url_img) values('%s', '%s', '%s')", sqlName, sqlScore, m_imgUrl);
+    sprintf(intertSql, "insert into animal(name, score, url_img) values('%s', '%s', '%s')", sqlName, sqlScore, imgUrl);
     int ret = mysql->myQuery(intertSql);
     cout << res << endl;
+
+    if (imgUrl != NULL)
+    {
+        free(imgUrl);
+    }
+
     return ret;   
 }
 
